@@ -35,3 +35,7 @@ My building platform: EPYC 7D12(1.1GHz, 32 core 64 threads) with 128G RAM.
 - hisa: the script build it sequentially, about 14 minutes
 
 The rest packages are provided by nixpkgs prebuilts.
+
+## License
+
+This project is licensed under the MIT license. The license doesn't apply to the bundled source code zips, which are licensed under GPL3.
