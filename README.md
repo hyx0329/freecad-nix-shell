@@ -30,11 +30,18 @@ Basically it's a nix-shell configuration of a FreeCAD environment with [CfdOF](h
 
 My building platform: EPYC 7D12(1.1GHz, 32 core 64 threads) with 128G RAM.
 
+- FreeCAD: about 10 minutes
 - OpenFOAM: around 50 minutes, it looks not fully parallel
 - cfmesh-cfdof: the script build it sequentially, about 15 minutes
 - hisa: the script build it sequentially, about 14 minutes
 
 The rest packages are provided by nixpkgs prebuilts.
+
+## Q&A
+
+### Why does FreeCAD need a rebuild?
+
+As of FreeCAD 0.21.2, the FEM workbench has a bug that prevents correct detection of solvers in system path.
 
 ## License
 
