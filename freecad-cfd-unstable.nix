@@ -1,18 +1,8 @@
 # freecad.nix
 let
   # unstable
-  # nixpkgs_ball = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/master";
-  # nixgl_ball = fetchTarball "https://github.com/nix-community/nixGL/archive/main.tar.gz";
-  # pinned
-  # use this to get hash: nix-prefetch-url --unpack url
-  nixpkgs_ball = fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/tarball/nixos-24.05";
-    sha256 = "1q7y5ygr805l5axcjhn0rn3wj8zrwbrr0c6a8xd981zh8iccmx0p";
-  };
-  nixgl_ball = fetchTarball {
-    url = "https://github.com/nix-community/nixGL/tarball/310f8e49a149e4c9ea52f1adf70cdc768ec53f8a";
-    sha256 = "1crnbv3mdx83xjwl2j63rwwl9qfgi2f1lr53zzjlby5lh50xjz4n";
-  };
+  nixpkgs_ball = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/master";
+  nixgl_ball = fetchTarball "https://github.com/nix-community/nixGL/archive/main.tar.gz";
 
   # import the packages
   nixgl = import nixgl_ball {};
