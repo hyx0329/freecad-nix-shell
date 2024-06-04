@@ -5,7 +5,7 @@ Basically it's a nix-shell configuration of a FreeCAD environment with [CfdOF](h
 ## How to use
 
 1. Install `nix`. Follow the instruction of your distro. Or you can follow [the instructions by nix official](https://nixos.org/download/).
-    - For Arch users, simply `pacman -Sy nix`.
+    - For Arch users, simply `pacman -Sy nix`, and enable `nix-daemon` service.
 1. Change working directory to here, the repository.
 1. Open a new shell with `nix-shell freecad-cfd.nix`. Packages are built in this step.
 1. In the new shell, install `CfdOF` plugin by executing the script `install-mod-cfdof.sh`
