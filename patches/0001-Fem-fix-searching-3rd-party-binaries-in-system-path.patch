@@ -1,0 +1,35 @@
+From a992930b702b3b54254ab0999b9911e5448937f8 Mon Sep 17 00:00:00 2001
+From: hyx0329 <hyx0329@163.com>
+Date: Tue, 4 Jun 2024 15:58:43 +0800
+Subject: [PATCH] Fem: fix searching 3rd-party binaries in system path, 0.21.2
+
+---
+ src/Mod/Fem/App/FemTools.cpp | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/Mod/Fem/App/FemTools.cpp b/src/Mod/Fem/App/FemTools.cpp
+index d622862fcf..2c39dc8053 100644
+--- a/src/Mod/Fem/App/FemTools.cpp
++++ b/src/Mod/Fem/App/FemTools.cpp
+@@ -24,6 +24,7 @@
+ 
+ #ifndef _PreComp_
+ # include <QFileInfo>
++# include <QStandardPaths>
+ 
+ # include <BRepAdaptor_Curve.hxx>
+ # include <BRepAdaptor_Surface.hxx>
+@@ -298,8 +299,8 @@ std::string Fem::Tools::checkIfBinaryExists(std::string prefSection,
+ #if defined(FC_OS_WIN32)
+         binaryName = binaryName + ".exe";
+ #endif
+-        // first check the environment paths by QFileInfo
+-        if (QFileInfo::exists(QString::fromLatin1(binaryName.c_str()))) {
++        // first check the environment paths, normally determined by the PATH environment variable
++        if (!QStandardPaths::findExecutable(QString::fromLatin1(binaryName.c_str())).isEmpty()) {
+             return binaryName;
+         }
+         // check the folder of the FreeCAD binary
+-- 
+2.45.1
+

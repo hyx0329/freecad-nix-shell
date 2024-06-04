@@ -23,6 +23,13 @@ let
     overlays = [ ];
   };
 
+  # some bug hotfix, only for freecad 0.21.2
+  freecad-patched = pkgs.freecad.overrideAttrs (finalAttrs: previousAttrs: {
+      patches = previousAttrs.patches ++ [ 
+          ./patches/0001-Fem-fix-searching-3rd-party-binaries-in-system-path.patch
+       ]; 
+    });
+
   custompkgs = pkgs.callPackage (import ./custompkgs) { };
   openfoam = custompkgs.openfoam-2306;
   cfmesh = custompkgs.cfmesh-cfdof.override { openfoam = openfoam; };
@@ -35,8 +42,10 @@ pkgs.mkShell {
     pkgs.git
     pkgs.curl
 
-    pkgs.freecad
     nixgl.nixGLIntel # Mesa OpenGL implementation (intel, amd, nouveau, ...).
+
+    # pkgs.freecad
+    freecad-patched
 
     pkgs.calculix
     pkgs.elmerfem
