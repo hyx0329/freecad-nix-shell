@@ -1,14 +1,6 @@
 { lib, stdenv
 , fetchzip
-, unzip
-, boost
-, cgal
-, fftw
-, openmpi
-, paraview
-, parmetis
-, scotch
-, zlib
+, unzip # required for bundled zip
 # need to provide a matching version of openfoam
 , openfoam ? null
 , version ? "bundled"
@@ -29,7 +21,7 @@ stdenv.mkDerivation rec {
       }
     ;
 
-  buildInputs = [ openfoam boost cgal paraview parmetis scotch openmpi fftw zlib ];
+  buildInputs = [ openfoam ] ++ openfoam.buildInputs;
   nativeBuildInputs = [ unzip ];
 
   configurePhase = ''
