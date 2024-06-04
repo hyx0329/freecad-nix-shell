@@ -38,8 +38,11 @@ pkgs.mkShell {
     pkgs.freecad
     nixgl.nixGLIntel # Mesa OpenGL implementation (intel, amd, nouveau, ...).
 
+    pkgs.calculix
+    pkgs.elmerfem
     pkgs.gmsh
     pkgs.paraview
+
     openfoam
     cfmesh
     hisa
