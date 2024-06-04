@@ -43,6 +43,13 @@ The rest packages are provided by nixpkgs prebuilts.
 
 As of FreeCAD 0.21.2, the FEM workbench has a bug that prevents correct detection of solvers in system path.
 
+## Credits
+
+- [CfdOF](https://github.com/jaheyns/CfdOF)
+- [AUR openfoam-org](https://aur.archlinux.org/packages/openfoam-org)
+- [AUR openfoam-com](https://aur.archlinux.org/packages/openfoam-com)
+
 ## License
 
-This project is licensed under the MIT license. The license doesn't apply to the bundled source code zips, which are licensed under GPL3.
+This project is licensed under the MIT license.
+The license doesn't apply to the bundled source code zips(cfmesh, hisa), which are licensed under GPL3.
