@@ -1,6 +1,6 @@
 # Install CfdOF to freecad-state/userdata/Mod/CfdOF
 
-CFDOF_COMMIT=5816daf1c5efcf51af8eb7d9c7e3138f7d7d1531
+CFDOF_COMMIT=96d6e5acdabe6bf750456e144593ee264d0c45c2
 
 [ ! -d freecad-state/userdata/Mod/CfdOF ] || { echo "CfdOF already installed"; exit 0; }
 
