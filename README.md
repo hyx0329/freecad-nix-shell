@@ -34,6 +34,7 @@ My building platform: EPYC 7D12(1.1GHz, 32 core 64 threads) with 128G RAM.
 - OpenFOAM: around 50 minutes, it looks not fully parallel
 - cfmesh-cfdof: the script build it sequentially, about 15 minutes
 - hisa: the script build it sequentially, about 14 minutes
+- parmetis and scotch are rebuilt for their dynamic linking libraries, and these shouldn't take long time to build
 
 The rest packages are provided by nixpkgs prebuilts.
 

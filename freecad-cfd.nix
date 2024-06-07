@@ -50,7 +50,7 @@ pkgs.mkShell {
     pkgs.calculix
     pkgs.elmerfem
     pkgs.gmsh
-    pkgs.paraview
+    # pkgs.paraview # not necesary because the openfoam package carries it
 
     openfoam
     cfmesh

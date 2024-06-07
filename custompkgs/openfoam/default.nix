@@ -26,26 +26,27 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ boost cgal paraview parmetis scotch openmpi fftw zlib ];
   nativeBuildInputs = [ cmake bzip2 flex ];
+  propagatedBuildInputs = [ openmpi paraview ];
 
   configurePhase = ''
     patchShebangs wmake/w*
     patchShebangs wmake/scripts
     patchShebangs Allwmake
 
-    echo "# Preferences for arch-linux
+    echo "# Preferences for the environment
     export WM_COMPILER_TYPE=system
     export WM_MPLIB=SYSTEMOPENMPI
+    export FOAM_EXTRA_CXXFLAGS='-std=c++14'
     # End" \
     > etc/prefs.sh
 
     ./bin/tools/foamConfigurePaths \
-      -adios adios-system \
-      -boost boost-system \
-      -cgal cgal-system \
-      -fftw fftw-system \
-      -metis metis-system \
-      -paraview paraview-system \
-      -scotch scotch-system \
+      -boost-path ${boost} \
+      -cgal-path ${cgal} \
+      -fftw-path ${fftw} \
+      -metis-path ${parmetis} \
+      -paraview-path ${paraview} \
+      -scotch-path ${scotch} \
       ;
     '';
 
@@ -61,6 +62,8 @@ stdenv.mkDerivation rec {
     '';
 
   installPhase = ''
+    [ -e ThirdParty ] || echo "system dependencies" >| ThirdParty
+
     install -d $out/opt/OpenFOAM/ThirdParty-v${version} $out/etc/profile.d
     cp -r $(pwd) $out/opt/OpenFOAM/OpenFOAM-v${version}
     chmod -R 755 $out/opt/OpenFOAM/OpenFOAM-v${version}/bin
