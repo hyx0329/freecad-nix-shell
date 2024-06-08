@@ -4,4 +4,4 @@ if [ -z "$WM_PROJECT" ]; then
     [ -f "$FOAM_INST_DIR/etc/bashrc" ] && source $FOAM_INST_DIR/etc/bashrc
 fi
 
-exec nixGLIntel freecad
+exec nixGLIntel freecad $@

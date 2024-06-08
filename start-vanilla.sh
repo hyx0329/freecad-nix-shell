@@ -1,1 +1,1 @@
-nix-shell --command "./cmd.sh" freecad.nix
+exec nix-shell --command "./cmd.sh $(printf "%q " $@)" freecad.nix
