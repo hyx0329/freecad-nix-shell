@@ -6,6 +6,8 @@ This project aims to ease the environment setup for FreeCAD CfdOF workbench.
 
 Basically it's a nix-shell configuration of a FreeCAD environment with [CfdOF](https://github.com/jaheyns/CfdOF) installed.
 
+> By the time I finished this project, I found [preCICE adapters and solvers packaged with the Nix package manager](https://github.com/precice/nix-packages) which has a simliar goal(reproducibility). That's a flakes repository for NixOS.
+
 ## How to use
 
 1. Install `nix`. Follow the instruction of your distro. Or you can follow [the instructions by nix official](https://nixos.org/download/).
@@ -38,8 +40,8 @@ My building platform: EPYC 7D12(1.1GHz, 32 core 64 threads) with 128G RAM.
 
 - FreeCAD: about 10 minutes
 - OpenFOAM: around 50 minutes, it looks not fully parallel
-- cfmesh-cfdof: the script build it sequentially, about 15 minutes
-- hisa: the script build it sequentially, about 14 minutes
+- cfmesh-cfdof: the scripts build it sequentially, about 15 minutes
+- hisa: the scripts build it sequentially, about 14 minutes
 - parmetis and scotch are rebuilt for their dynamic linking libraries, and these shouldn't take long time to build
 
 The rest packages are provided by nixpkgs prebuilts.
@@ -56,6 +58,8 @@ If you don't need this patch or don't want to rebuild, just comment out `freecad
 - [CfdOF](https://github.com/jaheyns/CfdOF)
 - [AUR openfoam-org](https://aur.archlinux.org/packages/openfoam-org)
 - [AUR openfoam-com](https://aur.archlinux.org/packages/openfoam-com)
+- [AUR scotch](https://aur.archlinux.org/packages/scotch)
+- [AUR parmetis-git](https://aur.archlinux.org/packages/parmetis-git)
 
 ## License
 
