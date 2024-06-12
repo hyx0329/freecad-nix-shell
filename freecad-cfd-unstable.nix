@@ -13,7 +13,7 @@ let
     overlays = [ ];
   };
 
-  custompkgs = pkgs.callPackage (import ./custompkgs) { };
+  custompkgs = import ./custompkgs { pkgs = pkgs; };
   openfoam = custompkgs.openfoam-2306;
   cfmesh = custompkgs.cfmesh-cfdof-unstable.override { openfoam = openfoam; };
   hisa = custompkgs.hisa-unstable.override { openfoam = openfoam; };

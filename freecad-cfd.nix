@@ -30,7 +30,7 @@ let
        ]; 
     });
 
-  custompkgs = pkgs.callPackage (import ./custompkgs) { };
+  custompkgs = import ./custompkgs { pkgs = pkgs; };
   openfoam = custompkgs.openfoam-2306;
   cfmesh = custompkgs.cfmesh-cfdof.override { openfoam = openfoam; };
   hisa = custompkgs.hisa.override { openfoam = openfoam; };
