@@ -1,35 +1,104 @@
-From a992930b702b3b54254ab0999b9911e5448937f8 Mon Sep 17 00:00:00 2001
+From 9a80cae55cccfeff4bb49e52611eeb2781d4ad3a Mon Sep 17 00:00:00 2001
 From: hyx0329 <hyx0329@163.com>
 Date: Tue, 4 Jun 2024 15:58:43 +0800
 Subject: [PATCH] Fem: fix searching 3rd-party binaries in system path, 0.21.2
 
 ---
- src/Mod/Fem/App/FemTools.cpp | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ src/Mod/Fem/App/FemTools.cpp                 | 39 ++++++++++++--------
+ src/Mod/Fem/Gui/DlgSettingsFemGeneralImp.cpp |  2 +-
+ src/Mod/Fem/Gui/Workbench.cpp                |  2 +-
+ 3 files changed, 25 insertions(+), 18 deletions(-)
 
 diff --git a/src/Mod/Fem/App/FemTools.cpp b/src/Mod/Fem/App/FemTools.cpp
-index d622862fcf..2c39dc8053 100644
+index d622862fcf..5ad2ee384a 100644
 --- a/src/Mod/Fem/App/FemTools.cpp
 +++ b/src/Mod/Fem/App/FemTools.cpp
-@@ -24,6 +24,7 @@
+@@ -23,7 +23,8 @@
+ #include "PreCompiled.h"
  
  #ifndef _PreComp_
- # include <QFileInfo>
+-# include <QFileInfo>
 +# include <QStandardPaths>
++# include <QStringList>
  
  # include <BRepAdaptor_Curve.hxx>
  # include <BRepAdaptor_Surface.hxx>
-@@ -298,8 +299,8 @@ std::string Fem::Tools::checkIfBinaryExists(std::string prefSection,
- #if defined(FC_OS_WIN32)
-         binaryName = binaryName + ".exe";
- #endif
+@@ -295,28 +296,34 @@ std::string Fem::Tools::checkIfBinaryExists(std::string prefSection,
+     bool knownDirectories = hGrp->GetBool(knownDirectoriesString.c_str(), true);
+ 
+     if (knownDirectories) {
+-#if defined(FC_OS_WIN32)
+-        binaryName = binaryName + ".exe";
+-#endif
 -        // first check the environment paths by QFileInfo
 -        if (QFileInfo::exists(QString::fromLatin1(binaryName.c_str()))) {
+-            return binaryName;
 +        // first check the environment paths, normally determined by the PATH environment variable
-+        if (!QStandardPaths::findExecutable(QString::fromLatin1(binaryName.c_str())).isEmpty()) {
-             return binaryName;
++        // On Windows, the executable extensions(".exe" etc.) should be automatically appended
++        QString executablePath =
++            QStandardPaths::findExecutable(QString::fromLatin1(binaryName.c_str()));
++        if (!executablePath.isEmpty()) {
++            return executablePath.toStdString();
          }
          // check the folder of the FreeCAD binary
+         else {
+-            auto homePathBinary = App::Application::getHomePath() + "bin/" + binaryName;
+-            if (QFileInfo::exists(QString::fromLatin1(homePathBinary.c_str())))
+-                return binaryName;
++            auto appBinaryPath = App::Application::getHomePath() + "bin/";
++            QStringList pathCandidates = {QString::fromLatin1(appBinaryPath.c_str())};
++            QString executablePath =
++                QStandardPaths::findExecutable(QString::fromLatin1(binaryName.c_str()),
++                                               pathCandidates);
++            if (!executablePath.isEmpty()) {
++                return executablePath.toStdString();
++            }
+         }
+     }
+     else {
+         auto binaryPathString = prefBinaryName + "BinaryPath";
+-        ParameterGrp::handle hGrp =
+-            App::GetApplication().GetParameterGroupByPath(paramPath.c_str());
+-        auto binaryPath = hGrp->GetASCII(binaryPathString.c_str(), "");
+-        QFileInfo::exists(QString::fromLatin1(binaryPath.c_str()));
+-        if (QFileInfo::exists(QString::fromLatin1(binaryPath.c_str())))
+-            return binaryPath;
++        // use binary path from settings, fall back to system path if not defined
++        auto binaryPath = hGrp->GetASCII(binaryPathString.c_str(), binaryName.c_str());
++        QString executablePath =
++            QStandardPaths::findExecutable(QString::fromLatin1(binaryPath.c_str()));
++        if (!executablePath.isEmpty()) {
++            return executablePath.toStdString();
++        }
+     }
+     return "";
+ }
+diff --git a/src/Mod/Fem/Gui/DlgSettingsFemGeneralImp.cpp b/src/Mod/Fem/Gui/DlgSettingsFemGeneralImp.cpp
+index adf05bc409..08e6436dc8 100644
+--- a/src/Mod/Fem/Gui/DlgSettingsFemGeneralImp.cpp
++++ b/src/Mod/Fem/Gui/DlgSettingsFemGeneralImp.cpp
+@@ -43,7 +43,7 @@ DlgSettingsFemGeneralImp::DlgSettingsFemGeneralImp(QWidget* parent)
+     ui->cmb_def_solver->clear();
+     std::vector<std::string> Solvers = {"None"};
+ 
+-    if (!Fem::Tools::checkIfBinaryExists("CCX", "ccx", "ccx").empty())
++    if (!Fem::Tools::checkIfBinaryExists("Ccx", "ccx", "ccx").empty())
+         Solvers.push_back("CalculiX");
+     if (!Fem::Tools::checkIfBinaryExists("Elmer", "elmer", "ElmerSolver").empty())
+         Solvers.push_back("Elmer");
+diff --git a/src/Mod/Fem/Gui/Workbench.cpp b/src/Mod/Fem/Gui/Workbench.cpp
+index 232d69d5b3..ad3b562444 100755
+--- a/src/Mod/Fem/Gui/Workbench.cpp
++++ b/src/Mod/Fem/Gui/Workbench.cpp
+@@ -180,7 +180,7 @@ Gui::ToolBarItem* Workbench::setupToolBars() const
+ 
+     Gui::ToolBarItem* solve = new Gui::ToolBarItem(root);
+     solve->setCommand("Solve");
+-    if (!Fem::Tools::checkIfBinaryExists("CCX", "ccx", "ccx").empty())
++    if (!Fem::Tools::checkIfBinaryExists("Ccx", "ccx", "ccx").empty())
+         *solve << "FEM_SolverCalculixCxxtools";
+     if (!Fem::Tools::checkIfBinaryExists("Elmer", "elmer", "ElmerSolver").empty())
+         *solve << "FEM_SolverElmer";
 -- 
-2.45.1
+2.45.2
 
