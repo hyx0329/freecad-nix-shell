@@ -16,12 +16,12 @@ Basically it's a nix-shell configuration of a FreeCAD environment with [CfdOF](h
 1. Open a new shell with `nix-shell freecad-cfd.nix`. Packages are built in this step. This is the way to launch an interactive shell, and normally the packages are built only once.
 1. In the new shell, install `CfdOF` plugin by executing the script `install-mod-cfdof.sh`
     - this script pins the module's git revision, making it reproducible
+1. Run `mkdir -p freecad-state/{home,userdata,temp}` to create the folders for FreeCAD data. Read `shellHook` variable in `freecad-cfd.nix` and `cmd.sh` for more details.
 1. (Optional) In console, run `freecad -t TestCfdOF`, and it will test the workbench.
 1. In console, run `freecad`, and enjoy your journey.
 1. (Optional) To further test the environment, you need to load a demo from CfdOF, and run the calculation.
     - In some cases, testing a single demo cannot ensure everything works.
 1. Later you don't need to run the steps above again if you want to launch FreeCAD directly, just change directory here and execute `start-cfd.sh`. The script will pass the arguments to FreeCAD.
-1. User data will be saved in `freecad-state`.
 
 ## How it works
 
